@@ -7,3 +7,30 @@
         <img src="lady-transparent.png" alt="Walking Lady" class="lady-img">
     </div>
 </div>
+
+
+<!-- Import the component -->
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+<!-- The Responsive 3D Viewer -->
+<style>
+  model-viewer {
+    width: 100%;
+    height: 600px; /* Adjust based on your hero section height */
+    background-color: #2e2a25; /* Matches the dark background of the image */
+  }
+</style>
+
+<model-viewer 
+  src="reading_nook_model.glb" 
+  poster="fallback_image.jpg"
+  alt="3D Mustard Armchair and Lamp" 
+  shadow-intensity="1" 
+  camera-controls 
+  auto-rotate 
+  touch-action="pan-y"
+  exposure="1.2">
+  
+  <!-- This adds the warm spotlight effect -->
+  <div slot="poster" style="background-image: url('loading-spinner.png');"></div>
+</model-viewer>
