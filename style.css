@@ -1,0 +1,46 @@
+:root {
+    --stair-angle: 35deg; /* Matches the diagonal of your stair image */
+}
+
+body {
+    margin: 0;
+    height: 500vh; /* Creates scroll length */
+    background: #000;
+}
+
+.scroll-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.stairs {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: url('grand-stairs-texture.jpg');
+    background-repeat: repeat;
+    background-size: 600px; /* Adjust based on your image */
+    transform-origin: center;
+    z-index: 1;
+}
+
+.lady-wrapper {
+    position: fixed;
+    top: 40vh;   /* Center-left placement */
+    left: 20vw;
+    width: 30vw;
+    z-index: 2;
+    will-change: transform;
+}
+
+.lady-img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
