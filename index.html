@@ -3,151 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxury Descent | Fashion Scroll</title>
+    <title>Luxury Descent | Interactive Fashion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --gold: #d4af37;
-            --marble: #f0f0f0;
-            --dark: #1a1a1a;
+            --marble: #ffffff;
+            --dark: #050505;
         }
 
         body, html {
             margin: 0;
             padding: 0;
             background-color: var(--dark);
-            font-family: 'Playfair Display', serif;
+            font-family: 'Cinzel', serif;
             overflow-x: hidden;
+            height: 1000vh; /* Long scroll for the 9:70 ratio feel */
         }
 
-        /* The 9:70 Aspect Ratio Container */
-        .main-container {
-            position: relative;
-            width: 100vw;
-            height: 700vh; /* Extremely tall for the 70 ratio */
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-                        url('https://images.unsplash.com/photo-1616486341351-79b940905479?auto=format&fit=crop&q=80&w=1000'); /* Artistic Furniture Background */
-            background-attachment: fixed;
-            background-size: cover;
+        /* The Moving Stairs Background */
+        .staircase-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200vw;
+            height: 200vh;
+            /* Luxurious Marble & Gold Step Pattern */
+            background: 
+                linear-gradient(45deg, transparent 48%, var(--gold) 49%, var(--marble) 50%, var(--marble) 70%, transparent 71%);
+            background-size: 500px 500px;
+            z-index: 1;
+            will-change: transform;
         }
 
-        /* The Luxury Stairs */
-        .staircase {
-            position: absolute;
+        /* The Fixed Lady (Main Character) */
+        .lady-container {
+            position: fixed;
+            top: 50%;
+            left: 35%;
+            transform: translate(-50%, -50%);
+            width: 450px;
+            height: 700px;
+            z-index: 10;
+            pointer-events: none;
+            transition: transform 0.1s ease-out;
+        }
+
+        .lady-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 30px 50px rgba(0,0,0,1));
+        }
+
+        /* Furniture Caricatures - Background Parallax */
+        .furniture {
+            position: fixed;
+            z-index: 2;
+            filter: brightness(0.4) contrast(1.2) sepia(0.3);
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        /* Artistic Overlays */
+        .vignette {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            /* Creating a repeating stair pattern using CSS */
-            background: 
-                linear-gradient(135deg, transparent 49%, var(--gold) 50%, var(--gold) 51%, transparent 52%),
-                linear-gradient(to bottom, transparent 95%, rgba(212, 175, 55, 0.3) 100%);
-            background-size: 100px 100px;
-        }
-
-        /* The Model / Lady */
-        .lady {
-            position: fixed; /* Stays in viewport */
-            top: 20%;
-            left: 10%;
-            width: 300px;
-            height: 500px;
-            z-index: 10;
+            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.8) 100%);
+            z-index: 5;
             pointer-events: none;
-            transition: transform 0.1s linear;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
         }
 
-        .lady img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        /* Background Furniture Caricatures */
-        .furniture-deco {
-            position: absolute;
-            opacity: 0.4;
-            filter: grayscale(100%) brightness(0.7);
-        }
-
-        .furniture-1 { top: 5%; right: 10%; width: 400px; }
-        .furniture-2 { top: 25%; left: 5%; width: 350px; }
-        .furniture-3 { top: 45%; right: 15%; width: 450px; }
-        .furniture-4 { top: 70%; left: 10%; width: 400px; }
-
-        /* UI Elements */
-        .overlay-text {
+        .header-text {
             position: fixed;
-            bottom: 50px;
-            right: 50px;
+            top: 50px;
+            left: 50px;
             color: var(--gold);
+            z-index: 20;
+            font-size: 1.5rem;
+            letter-spacing: 10px;
             text-transform: uppercase;
-            letter-spacing: 5px;
-            font-size: 1.2rem;
-            border-right: 2px solid var(--gold);
-            padding-right: 20px;
         }
 
-        /* Scroll Indicator */
-        .scroll-bar {
+        .scroll-indicator {
             position: fixed;
-            right: 10px;
-            top: 0;
+            bottom: 40px;
+            right: 40px;
             width: 2px;
-            height: 100%;
-            background: rgba(255,255,255,0.1);
+            height: 100px;
+            background: rgba(212, 175, 55, 0.2);
+            z-index: 20;
         }
-        .scroll-progress {
+
+        .scroll-fill {
             width: 100%;
             background: var(--gold);
             height: 0%;
+            transition: height 0.1s;
         }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <!-- Background Furniture (Visual Caricatures) -->
-        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=500" class="furniture-deco furniture-1" alt="Furniture">
-        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=500" class="furniture-deco furniture-2" alt="Furniture">
-        <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=500" class="furniture-deco furniture-3" alt="Furniture">
+    <div class="header-text">The Descent of Elegance</div>
+    <div class="vignette"></div>
+    
+    <!-- This moves as you scroll -->
+    <div class="staircase-container" id="stairs"></div>
 
-        <div class="staircase"></div>
+    <!-- Furniture Floating by in Parallax -->
+    <img src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?q=80&w=400" class="furniture" id="f1" style="width: 300px; top: 20%; right: -10%;">
+    <img src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=400" class="furniture" id="f2" style="width: 400px; top: 60%; right: -20%;">
+    <img src="https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?q=80&w=400" class="furniture" id="f3" style="width: 250px; top: 10%; left: -5%;">
 
-        <!-- The "Hot Lady" in Luxurious Outfit -->
-        <!-- Note: Replace this URL with your specific asset if needed -->
-        <div class="lady" id="lady">
-            <img src="https://images.unsplash.com/photo-1539109132382-381bb3f1c2b3?auto=format&fit=crop&q=80&w=800" alt="Luxurious Lady Stepping Down">
-        </div>
+    <!-- The Sexy/Hot Model Fixed in Viewport -->
+    <div class="lady-container" id="lady">
+        <!-- Using a high-fashion model in a luxury gown -->
+        <img src="https://images.unsplash.com/photo-1539109132382-381bb3f1c2b3?q=80&w=1000" alt="Hot Lady in Luxury Gown">
     </div>
 
-    <div class="overlay-text">The Grand Descent</div>
-    <div class="scroll-bar"><div class="scroll-progress" id="progress"></div></div>
+    <div class="scroll-indicator">
+        <div class="scroll-fill" id="fill"></div>
+    </div>
 
     <script>
+        const stairs = document.getElementById('stairs');
         const lady = document.getElementById('lady');
-        const progress = document.getElementById('progress');
+        const fill = document.getElementById('fill');
+        const f1 = document.getElementById('f1');
+        const f2 = document.getElementById('f2');
+        const f3 = document.getElementById('f3');
 
         window.addEventListener('scroll', () => {
-            const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-            
-            // Movement logic:
-            // Move Down (Y) based on scroll
-            // Move Right (X) to simulate stepping down diagonally
-            const moveY = scrollPercent * 400; // Vertical range
-            const moveX = scrollPercent * 300; // Horizontal range
-            
-            // Subtle "Walking" oscillation using Sine wave
-            const walkCycle = Math.sin(window.scrollY * 0.05) * 10;
+            const scrolled = window.scrollY;
+            const scrollMax = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = scrolled / scrollMax;
 
-            // Apply transforms
-            lady.style.transform = `translate(${moveX}px, ${moveY + walkCycle}px)`;
-            
-            // Update custom scroll bar
-            progress.style.height = (scrollPercent * 100) + "%";
+            // 1. MOVE STAIRS DIAGONALLY (Treadmill effect)
+            // As you scroll down, the stairs move UP and LEFT
+            const stairX = -(scrolled * 0.5);
+            const stairY = -(scrolled * 0.5);
+            stairs.style.transform = `translate(${stairX}px, ${stairY}px)`;
+
+            // 2. THE LADY'S STEPPING MOTION
+            // She stays fixed but bobs up and down to simulate weight of steps
+            // We use a sine wave tied to scroll position
+            const stepHeight = Math.abs(Math.sin(scrolled * 0.01)) * 25;
+            const hipSway = Math.sin(scrolled * 0.005) * 10;
+            lady.style.transform = `translate(-50%, calc(-50% + ${stepHeight}px)) rotate(${hipSway * 0.2}deg)`;
+
+            // 3. FURNITURE PARALLAX
+            // Furniture pieces move at different speeds for 3D depth
+            f1.style.transform = `translate(${-(scrolled * 0.8)}px, ${-(scrolled * 0.2)}px) rotate(${scrolled * 0.02}deg)`;
+            f2.style.transform = `translate(${-(scrolled * 1.2)}px, ${-(scrolled * 0.4)}px)`;
+            f3.style.transform = `translate(${-(scrolled * 0.4)}px, ${-(scrolled * 0.1)}px)`;
+
+            // 4. SCROLL PROGRESS
+            fill.style.height = (scrollPercent * 100) + "%";
         });
     </script>
-</body>
-</html>
 </body>
 </html>
