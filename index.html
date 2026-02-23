@@ -1,36 +1,157 @@
-<div class="scroll-container">
-    <!-- The Moving Staircase -->
-    <div class="stairs" id="stairs"></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High Fashion Stair Descent</title>
     
-    <!-- The Walking Lady -->
-    <div class="lady-wrapper" id="ladyWrapper">
-        <img src="lady-transparent.png" alt="Walking Lady" class="lady-img">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root {
+            --stair-color: #1a1a1a;
+            --accent-color: #333;
+        }
+
+        body {
+            margin: 0;
+            background: #050505;
+            overflow-x: hidden;
+            height: 800vh; /* Long scroll for smooth descent */
+        }
+
+        /* Viewport stays fixed while we scroll */
+        .scene {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* THE STAIRS (SVG Pattern for guaranteed visibility) */
+        .stairs-treadmill {
+            position: absolute;
+            width: 400vw;
+            height: 400vh;
+            top: -150vh;
+            left: -150vw;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 100 L50 100 L50 50 L100 50 L100 0' fill='none' stroke='%23222' stroke-width='2'/%3E%3C/svg%3E");
+            background-size: 200px 200px;
+            transform: rotate(-15deg); /* Professional camera tilt */
+            will-change: transform;
+        }
+
+        /* THE LADY CONTAINER */
+        .lady-container {
+            position: absolute;
+            width: 25vw; /* Responsive width */
+            min-width: 250px;
+            z-index: 100;
+            left: 15vw; /* Center-left focus */
+            top: 20vh;
+            will-change: transform;
+            /* Ensures she is visible */
+            display: block !important;
+            opacity: 1 !important;
+        }
+
+        .lady-container img {
+            width: 100%;
+            height: auto;
+            /* Give her a shadow so she sits on the "steps" */
+            filter: drop-shadow(20px 30px 15px rgba(0,0,0,0.8));
+        }
+
+        /* Furniture/Foreground Elements for Depth */
+        .foreground-pillar {
+            position: absolute;
+            right: -10vw;
+            width: 40vw;
+            height: 150vh;
+            background: linear-gradient(to right, #000, #111, #000);
+            z-index: 200;
+            opacity: 0.8;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="scene">
+        <!-- Background Stairs -->
+        <div class="stairs-treadmill" id="stairs"></div>
+
+        <!-- The Lady (Transparent PNG) -->
+        <div class="lady-container" id="lady">
+            <img src="https://www.pngarts.com/files/3/Model-PNG-Image-Transparent-Background.png" alt="High Fashion Model">
+        </div>
+
+        <!-- Foreground for Depth -->
+        <div class="foreground-pillar" id="pillar"></div>
     </div>
-</div>
 
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
 
-<!-- Import the component -->
-<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+        const lady = document.getElementById('lady');
+        const stairs = document.getElementById('stairs');
+        const pillar = document.getElementById('pillar');
 
-<!-- The Responsive 3D Viewer -->
-<style>
-  model-viewer {
-    width: 100%;
-    height: 600px; /* Adjust based on your hero section height */
-    background-color: #2e2a25; /* Matches the dark background of the image */
-  }
-</style>
+        // PHYSICS CONFIGURATION
+        const stepFrequency = 0.005; // Adjust how often she "steps"
+        const bobAmplitude = 25;    // How high she bobs up and down
 
-<model-viewer 
-  src="reading_nook_model.glb" 
-  poster="fallback_image.jpg"
-  alt="3D Mustard Armchair and Lamp" 
-  shadow-intensity="1" 
-  camera-controls 
-  auto-rotate 
-  touch-action="pan-y"
-  exposure="1.2">
-  
-  <!-- This adds the warm spotlight effect -->
-  <div slot="poster" style="background-image: url('loading-spinner.png');"></div>
-</model-viewer>
+        // 1. MASTER TIMELINE (The Movement)
+        const mainTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 0.2, // Smooth follow
+            }
+        });
+
+        // The Stairs move Up and Left (Treadmill)
+        mainTl.to(stairs, {
+            x: "-50vw",
+            y: "-80vh",
+            ease: "none"
+        }, 0);
+
+        // The Lady moves Down and Right (Diagonal Progression)
+        mainTl.to(lady, {
+            x: "30vw",
+            y: "40vh",
+            ease: "none"
+        }, 0);
+
+        // The Pillar moves faster (Parallax Depth)
+        mainTl.to(pillar, {
+            x: "-20vw",
+            ease: "none"
+        }, 0);
+
+        // 2. THE STEP PHYSICS (The Bobbing)
+        // This makes her look like she's putting weight on each step
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            
+            // Using Math.abs creates a "bounce" effect rather than a smooth slide
+            // This mimics the impact of a foot hitting a wooden stair
+            const bob = Math.abs(Math.sin(scrolled * stepFrequency)) * bobAmplitude;
+            
+            // Apply the bob only
+            gsap.set(lady, {
+                yPercent: bob
+            });
+        });
+
+    </script>
+</body>
+</html>
