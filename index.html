@@ -3,181 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>High Fashion - The Descent</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <title>Luxury Descent | Fashion Scroll</title>
     <style>
         :root {
             --gold: #d4af37;
+            --marble: #f0f0f0;
             --dark: #1a1a1a;
-            --height: 7000px; /* Creating the 9:70 verticality */
         }
 
         body, html {
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
-            background-color: #fcfaf2;
+            background-color: var(--dark);
             font-family: 'Playfair Display', serif;
+            overflow-x: hidden;
         }
 
-        /* Artistic Furniture Background */
-        .bg-furniture {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            z-index: 1;
-            opacity: 0.15;
-            background-image: url('https://www.transparenttextures.com/patterns/cubes.png'); /* Pattern fallback */
-            pointer-events: none;
-        }
-
-        /* The Scroll Container */
-        .scroll-container {
-            height: var(--height);
+        /* The 9:70 Aspect Ratio Container */
+        .main-container {
             position: relative;
+            width: 100vw;
+            height: 700vh; /* Extremely tall for the 70 ratio */
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                        url('https://images.unsplash.com/photo-1616486341351-79b940905479?auto=format&fit=crop&q=80&w=1000'); /* Artistic Furniture Background */
+            background-attachment: fixed;
+            background-size: cover;
         }
 
-        /* The Visual Stage */
-        .viewport {
-            position: fixed;
+        /* The Luxury Stairs */
+        .staircase {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2;
-        }
-
-        /* Luxurious Stairs */
-        .stairs-container {
-            position: absolute;
-            width: 150%;
-            height: 150%;
-            top: -25%;
-            left: -25%;
-            /* Creating a CSS-based luxury stair visual */
-            background: linear-gradient(135deg, transparent 49%, var(--gold) 50%, #fff 51%, transparent 52%);
+            height: 100%;
+            /* Creating a repeating stair pattern using CSS */
+            background: 
+                linear-gradient(135deg, transparent 49%, var(--gold) 50%, var(--gold) 51%, transparent 52%),
+                linear-gradient(to bottom, transparent 95%, rgba(212, 175, 55, 0.3) 100%);
             background-size: 100px 100px;
-            transform: rotate(0deg);
         }
 
-        /* The Lady Character */
+        /* The Model / Lady */
         .lady {
-            position: absolute;
+            position: fixed; /* Stays in viewport */
+            top: 20%;
+            left: 10%;
             width: 300px;
             height: 500px;
             z-index: 10;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            /* Placeholder for the Hot Lady Image */
-            background-image: url('https://images.squarespace-cdn.com/content/v1/5769747237c581e1146755a5/1470764137889-YI9STN6Q96M36D0B0A7B/woman-walking.png');
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
-            will-change: transform;
+            pointer-events: none;
+            transition: transform 0.1s linear;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
         }
 
-        /* Decorative UI */
+        .lady img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Background Furniture Caricatures */
+        .furniture-deco {
+            position: absolute;
+            opacity: 0.4;
+            filter: grayscale(100%) brightness(0.7);
+        }
+
+        .furniture-1 { top: 5%; right: 10%; width: 400px; }
+        .furniture-2 { top: 25%; left: 5%; width: 350px; }
+        .furniture-3 { top: 45%; right: 15%; width: 450px; }
+        .furniture-4 { top: 70%; left: 10%; width: 400px; }
+
+        /* UI Elements */
         .overlay-text {
             position: fixed;
             bottom: 50px;
             right: 50px;
-            text-align: right;
-            z-index: 100;
-        }
-
-        .overlay-text h1 {
-            font-size: 5rem;
-            margin: 0;
-            color: var(--dark);
+            color: var(--gold);
             text-transform: uppercase;
-            letter-spacing: 10px;
-            opacity: 0.2;
+            letter-spacing: 5px;
+            font-size: 1.2rem;
+            border-right: 2px solid var(--gold);
+            padding-right: 20px;
         }
 
-        .scroll-indicator {
+        /* Scroll Indicator */
+        .scroll-bar {
             position: fixed;
-            left: 50%;
-            bottom: 20px;
-            transform: translateX(-50%);
-            font-size: 0.8rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            z-index: 100;
-            animation: bounce 2s infinite;
+            right: 10px;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
         }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0) translateX(-50%);}
-            40% {transform: translateY(-10px) translateX(-50%);}
-            60% {transform: translateY(-5px) translateX(-50%);}
+        .scroll-progress {
+            width: 100%;
+            background: var(--gold);
+            height: 0%;
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-furniture"></div>
-    
-    <div class="scroll-indicator">Scroll to Descend</div>
+    <div class="main-container">
+        <!-- Background Furniture (Visual Caricatures) -->
+        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=500" class="furniture-deco furniture-1" alt="Furniture">
+        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=500" class="furniture-deco furniture-2" alt="Furniture">
+        <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=500" class="furniture-deco furniture-3" alt="Furniture">
 
-    <div class="overlay-text">
-        <h1>Vogue</h1>
-        <p>AUTUMN COLLECTION 2024</p>
-    </div>
+        <div class="staircase"></div>
 
-    <div class="scroll-container">
-        <div class="viewport">
-            <!-- The Lady -->
-            <div class="lady" id="lady"></div>
-            
-            <!-- Structural Stairs -->
-            <div class="stairs-container" id="stairs"></div>
+        <!-- The "Hot Lady" in Luxurious Outfit -->
+        <!-- Note: Replace this URL with your specific asset if needed -->
+        <div class="lady" id="lady">
+            <img src="https://images.unsplash.com/photo-1539109132382-381bb3f1c2b3?auto=format&fit=crop&q=80&w=800" alt="Luxurious Lady Stepping Down">
         </div>
     </div>
 
+    <div class="overlay-text">The Grand Descent</div>
+    <div class="scroll-bar"><div class="scroll-progress" id="progress"></div></div>
+
     <script>
-        gsap.registerPlugin(ScrollTrigger);
+        const lady = document.getElementById('lady');
+        const progress = document.getElementById('progress');
 
-        // Animation for the Lady walking down
-        // We calculate the diagonal path based on the stair angle
-        gsap.to("#lady", {
-            scrollTrigger: {
-                trigger: ".scroll-container",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1, // Smoothly ties animation to scroll speed
-            },
-            x: "80vw", // Moves right
-            y: "80vh", // Moves down
-            rotation: 5, // Slight tilt as she steps
-            scale: 1.2, // Gets closer to the camera
-            ease: "none"
-        });
+        window.addEventListener('scroll', () => {
+            const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+            
+            // Movement logic:
+            // Move Down (Y) based on scroll
+            // Move Right (X) to simulate stepping down diagonally
+            const moveY = scrollPercent * 400; // Vertical range
+            const moveX = scrollPercent * 300; // Horizontal range
+            
+            // Subtle "Walking" oscillation using Sine wave
+            const walkCycle = Math.sin(window.scrollY * 0.05) * 10;
 
-        // Parallax effect for the stairs to make the "descent" feel infinite
-        gsap.to("#stairs", {
-            scrollTrigger: {
-                trigger: ".scroll-container",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 0.5,
-            },
-            backgroundPosition: "-1000px 1000px",
-            ease: "none"
-        });
-
-        // Add a "bobbing" animation to mimic walking steps
-        gsap.to("#lady", {
-            y: "-=20",
-            repeat: -1,
-            yoyo: true,
-            duration: 0.5,
-            ease: "sine.inOut"
+            // Apply transforms
+            lady.style.transform = `translate(${moveX}px, ${moveY + walkCycle}px)`;
+            
+            // Update custom scroll bar
+            progress.style.height = (scrollPercent * 100) + "%";
         });
     </script>
+</body>
+</html>
 </body>
 </html>
